@@ -6,19 +6,25 @@ import random
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*.mastercard.com"}})
 
-@app.route('/')
-def index():
-# Generate a random value between 1 and 5 for each item
-    i_tems = [
+i_tems = [
         { 'name': 'Mango', 'price': round(random.uniform(1, 5), 2) },
         { 'name': 'Banana', 'price': round(random.uniform(1, 5), 2) },
         { "name": "Apple", "price": round(random.uniform(1, 5), 2) },
         { "name": "Orange", "price": round(random.uniform(1, 5), 2) },
         { "name": "Grapes", "price": round(random.uniform(1, 5), 2) },
-        { "name": "Pineapple", "price": round(random.uniform(1, 5), 2) }
+        { "name": "Pineapple", "price": round(random.uniform(1, 5), 2) },   
     ]
+
+@app.route('/')
+def index():
+# Generate a random value between 1 and 5 for each item
     e_mail = "abhinava.srivastava@mastercard.com"
     return render_template('index.html', items=i_tems, email=e_mail)
+
+
+@app.route('/getlist')
+def getList():
+    return jsonify(i_tems)
 
 
 @app.route('/checkout', methods=['POST'])
