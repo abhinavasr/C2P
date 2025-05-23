@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://sandbox.src.mastercard.com/srci/integration/2/lib.js?srcDpaId=e1069096-8087-406e-a96a-db3c85ce57da_dpa1&locale=en_US"> </script>
+    
+    <script type="module" src="https://src.mastercard.com/srci/integration/components/src-ui-kit/src-ui-kit.esm.js"></script>
+    <link rel="stylesheet" href="https://src.mastercard.com/srci/integration/components/src-ui-kit/src-ui-kit.css">
+    <title>Merchant Checkout</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f9f9f9; }
+        .checkout-container { width: 60%; margin: auto; border: 1px solid #ddd; padding: 20px; background-color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        .item { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0; color: #333; }
+        button { background-color: #4CAF50; color: white; padding: 15px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border: none; width: 100%; margin-top: 20px; }
+        button:hover { background-color: #45a049; }
+    </style>
+    <script>
+        
+        home = this
+        // Function to open the modal
+        function openSuccessModal() {
+            // Get the modal
+            var modal = document.getElementById("successModal");
+            if (modal) {
+                modal.style.display = "block";
+            }
+        }
+
+        // // Function to close the modal
+        // function closeSuccessModal() {
+        //     // Get the modal
+        //     var modal = document.getElementById("successModal");
+        //     if (modal) {
+        //         modal.style.display = "none";
+        //         this.window.close()
+        //     }
+        // }
+
+        // // Close the modal if the user clicks anywhere outside of the modal content
+        // window.onclick = function(event) {
+        //     var modal = document.getElementById("successModal");
+        //     if (event.target == modal) {
+        //         closeSuccessModal();
+        //     }
+        // }
+    </script>
+    <style>
+        /* Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; /* 5% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 400px; /* Maximum width */
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+        }
+
+        .modal-content h2 {
+            color: #4CAF50;
+        }
+
+        .modal-content p {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .modal-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        .modal-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<style>
+    .user-email {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background-color: white;
+        padding: 5px;
+        border: 1px solid #ddd;
+        text-align: right; /* Align the email to the right */
+    }
+    .checkout-container {
+        margin-top: 50px; /* Add some space between user email and checkout container */
+    }
+</style>
+    <div class="user-email">{{email}}</div>
+    <div class="checkout-container">
+    <h2 style="color: #333; text-align: left;">Grocery Checkout</h2> <!-- Align the checkout title to the left -->
+<script>
+    // Define an array of items with their names and prices
+    var items =  JSON.parse('{{ items| tojson }}');
+
+    // Calculate the total cost
+    var total = items.reduce(function(sum, item) {
+        return sum + item.price;
+    }, 0);
+
+    // Round the total to two decimal places
+    total = Math.round(total * 100) / 100;
+
+    // Generate the HTML for each item and append it to the checkout container
+    var checkoutContainer = document.querySelector('.checkout-container');
+    items.forEach(function(item) {
+        var div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = '<span>' + item.name + '</span><span>$' + item.price.toFixed(2) + '</span>';
+        checkoutContainer.appendChild(div);
+    });
+
+    // Generate the HTML for the total and append it to the checkout container
+    var totalDiv = document.createElement('div');
+    totalDiv.className = 'item';
+    totalDiv.style.borderTop = '2px solid #ddd';
+    totalDiv.style.fontWeight = 'bold';
+    totalDiv.innerHTML = '<strong>Total:</strong><strong>$' + total.toFixed(2) + '</strong>';
+    checkoutContainer.appendChild(totalDiv);
+</script>
+
+<!-- Display card list -->
+<src-card-list
+    id="srcCardList"
+    locale="en_US"
+    card-brands="mastercard"
+    display-cancel-option="false"
+    display-add-card="true"
+    display-preferred-card="true"
+    display-sign-out="false"
+    card-selection-type="radioButton"
+    src-digital-card-id=""
+    display-header="true"
+    unaccepted-card-type=""
+    background="default"
+    style="display: none;"
+    style="--src-color-gray-lowest: purple;
+           --src-color-foreground: blue;
+           --src-card-art-width: 100px;
+           --src-card-art-height: 60px;
+           --src-card-preview-brand-font-size: 2rem;
+           --src-card-preview-number-font-color: red;
+           --src-card-preview-subtext-font-size: 20px;
+           --src-card-preview-subtext-color: green;
+           --src-error-color: green;
+           --src-error-font-size: 15px;
+           --src-radio-item-icon-border-color-checked: purple;
+           --src-accessibility-outline: 2px solid green;
+           --src-accessibility-outline-offset: 5px;
+           --src-list-card-item-padding-top-bottom: .7rem;
+           --src-list-card-item-padding-right-left: 1.7rem;"
+>
+</src-card-list>
+
+<src-otp-input style="display: none;" id="src-otp-input" 
+    locale="en_US" 
+    card-brands="mastercard" 
+    display-cancel-option="false" 
+    error-reason="" masked-identity-v
+    network-id="Mastercard" type="" is-successful="false" 
+    display-header="true" auto-submit="true" 
+    disable-elements="false" 
+    hide-loader="false" 
+    display-remember-me="false" 
+    otp-resend-loading="false" > 
+</src-otp-input>
+
+<!-- Make an iframe with Suggested: 480px (width) x 600px (height)-->
+ <!-- <iframe id="authIframe" src="about:blank" width="480" height="600" style="display: none;"></iframe> -->
+
+        <button onclick="makePayment()">Pay Now</button>
+    </div>
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <!-- <span class="close-button" onclick="closeSuccessModal()">&times;</span> -->
+            <h2>Payment Successful!</h2>
+            <p>Your payment has been completed successfully.</p>
+            <img src="https://media1.tenor.com/m/W2jJvOivFr8AAAAd/thank-you.gif" width="200px"/>
+            <p>Thank you for your purchase!</p>
+        </br>
+            <p>You can now close this page.</p>
+            <!-- <button class="modal-button" onclick="closeSuccessModal()">OK</button> -->
+        </div>
+    </div>
+
+    <script src="
+    /js/c2p.js"></script>
+</body>
+</html>

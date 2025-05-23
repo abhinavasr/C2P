@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS links;
+CREATE TABLE links (
+  id TEXT PRIMARY KEY,
+  data TEXT NOT NULL,
+  expires_at INTEGER NOT NULL
+);
