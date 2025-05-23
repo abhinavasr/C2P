@@ -38,16 +38,9 @@ def checkout():
 @app.route('/checkoutAPI', methods=['POST'])
 def checkoutAPI():
     # Get the input parameter from the POST request data as JSON
+    # Process payments here
     return {"result":"Okay"}
-    # input_param = request.get_json()
-    # print(input_param)
-    # if isinstance(input_param, dict):
-    #     e_mail = input_param.email
-    #     i_tems = input_param.items
-    #     return render_template('index.html', items=items, email=e_mail)        
-    # elif isinstance(input_param, list):
-    #     return render_template('index.html', items=input_param, email="abhinava.srivastava@mastercard.com")  
-    
+       
 
 @app.route('/access_data/<string:link_id>', methods=['GET'])
 def access_data_route(link_id):
